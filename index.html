@@ -175,8 +175,9 @@
 
   /* ---- 작업 요청 ---- */
   #req-form { display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
-  #req-topic { flex:1; min-width:200px; border:2px solid #dfe5f2; border-radius:10px; padding:10px 14px; font-size:14px; font-family:inherit; }
-  #req-topic:focus { outline:none; border-color:#1454FF; }
+  #req-form input { border:2px solid #dfe5f2; border-radius:10px; padding:10px 14px; font-size:14px; font-family:inherit; }
+  #req-form input:focus { outline:none; border-color:#1454FF; }
+  #req-topic { flex:1; min-width:180px; }
   #req-send { background:#1454FF; color:#fff; border:none; border-radius:10px; padding:10px 20px; font-size:14px; font-weight:700; cursor:pointer; }
   #req-send:disabled { opacity:.5; }
   #req-msg { font-size:12px; color:#0a9d58; font-weight:600; min-height:16px; margin-bottom:6px; }
@@ -265,6 +266,7 @@
     <div class="panel">
       <h2>📮 작업 요청 <span style="font-weight:500; font-size:12px; color:#98a2b8;">주제를 적으면 편집국이 접수합니다</span></h2>
       <div id="req-form">
+        <input id="req-name" maxlength="30" placeholder="이름 (선택)" style="width:110px; flex:none;">
         <input id="req-topic" maxlength="200" placeholder="예: 연금저축펀드 vs IRP, 뭐부터 채울까?">
         <button id="req-send">요청하기</button>
       </div>
@@ -520,7 +522,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ---------- 작업 요청 ----------
-const BADGE = { pending:'접수됨', working:'제작 중', done:'완료', rejected:'보류' };
+const BADGE = { pending:'검토 대기', working:'제작 중', done:'완료', rejected:'보류' };
 async function fetchRequests() {
   let reqs;
   try { reqs = await (await sfetch('office_requests?select=*&order=id.desc&limit=8')).json(); }
@@ -528,7 +530,7 @@ async function fetchRequests() {
   document.getElementById('req-list').innerHTML = reqs.map(r =>
     `<div class="req-row">
       <span class="req-badge ${r.status}">${BADGE[r.status] || r.status}</span>
-      <span style="flex:1">${r.topic.replace(/</g, '&lt;')}</span>
+      <span style="flex:1">${r.topic.replace(/</g, '&lt;')}${r.requester ? ` <span style="color:#98a2b8;font-size:11px">— ${String(r.requester).replace(/</g, '&lt;')}님</span>` : ''}</span>
       ${r.result_url ? `<a href="${r.result_url}" target="_blank" rel="noopener">보기↗</a>` : ''}
     </div>`
   ).join('') || '<div class="req-row">아직 요청이 없습니다</div>';
@@ -539,11 +541,12 @@ document.getElementById('req-send').onclick = async () => {
   if (topic.length < 2) return;
   const btn = document.getElementById('req-send');
   btn.disabled = true;
+  const requester = document.getElementById('req-name').value.trim() || null;
   try {
-    const res = await sfetch('office_requests', { method:'POST', body: JSON.stringify({ topic }) });
+    const res = await sfetch('office_requests', { method:'POST', body: JSON.stringify({ topic, requester }) });
     if (!res.ok) throw new Error(await res.text());
     input.value = '';
-    document.getElementById('req-msg').textContent = '접수됐습니다! 편집국이 곧 확인합니다 ✅';
+    document.getElementById('req-msg').textContent = '접수됐습니다! 편집국 검토 후 제작됩니다 ✅';
     setTimeout(() => document.getElementById('req-msg').textContent = '', 5000);
     fetchRequests();
   } catch (e) {
