@@ -267,6 +267,19 @@
   }
   .person.working .p-bubble, .person.error .p-bubble, .person.show-bubble .p-bubble { opacity:1; }
   .person.error .p-bubble { border-color:#E11D1D; color:#E11D1D; }
+  /* 잡담/아재개그 말풍선 (업무 말풍선과 별도) */
+  .p-chat {
+    position:absolute; bottom:62px; left:50%; transform:translateX(-50%);
+    background:#fff9e0; border:2px solid #d9a520; border-radius:10px;
+    font-size:11px; font-weight:600; padding:5px 9px;
+    width:max-content; max-width:190px; white-space:normal; text-align:center; line-height:1.35;
+    word-break:keep-all; opacity:0; transition:opacity .25s; z-index:1100; pointer-events:none;
+  }
+  .p-chat::after {
+    content:''; position:absolute; bottom:-6px; left:50%; margin-left:-5px;
+    border:5px solid transparent; border-top-color:#d9a520; border-bottom:0;
+  }
+  .p-chat.on { opacity:1; }
 
   /* ---- 하단 패널 공통 ---- */
   .panel { background:#fff; border-radius:14px; padding:16px 20px; }
@@ -559,6 +572,7 @@ Object.entries(ROLES).forEach(([role, cfg], i) => {
   el.className = 'person'; el.id = 'p-' + role;
   el.innerHTML = `
     <div class="p-bubble"></div>
+    <div class="p-chat"></div>
     <div class="p-inner"><div class="p-bob">
       <div class="p-stud"></div>
       <div class="p-head"><div class="p-hair" style="background:${cfg.hair}"></div><div class="p-eyes"></div><div class="p-smile"></div></div>
@@ -831,6 +845,94 @@ document.getElementById('req-send').onclick = async () => {
   btn.disabled = false;
 };
 document.getElementById('req-topic').addEventListener('keydown', (e) => { if (e.key === 'Enter') document.getElementById('req-send').click(); });
+
+// ---------- 휴식 시간 수다 & 아재개그 ----------
+const JOKES = [
+  { q: '소가 웃으면 뭐게?', p: '우하하' },
+  { q: '왕이 넘어지면?', p: '킹콩' },
+  { q: '오리가 얼면?', p: '언덕' },
+  { q: '김밥이 죽으면 가는 곳은?', p: '김밥천국' },
+  { q: '세상에서 제일 뜨거운 과일은?', p: '천도복숭아' },
+  { q: '바나나가 웃으면?', p: '바나나킥' },
+  { q: '딸기가 회사에서 잘리면?', p: '딸기시럽…(실업)' },
+  { q: '제일 억울한 도형은?', p: '원통' },
+  { q: '미소의 반대말은?', p: '당기소' },
+  { q: '물고기 중 제일 학벌 좋은 건?', p: '고등어' },
+  { q: '주식이 겸손하면?', p: '저평가' },
+  { q: 'IRP가 아침에 하는 말은?', p: '일어나!RP' },
+  { q: '은행이 제일 좋아하는 운동은?', p: '적금 들기' },
+  { q: 'ETF가 인기 많은 이유는?', p: '분산돼서 부담이 없대' },
+  { q: '아침에 제일 바쁜 새는?', p: '어제 못 잔 새' },
+];
+const SMALLTALK = [
+  '커피 한 잔 더 마실까…',
+  '오늘 코스피 봤어요? 대단하던데',
+  '다음 카드뉴스 주제 뭐가 좋을까',
+  '라면엔 역시 계란이지',
+  '탁구 한 판 하실 분~',
+  '연금 납입했더니 마음이 편-안',
+  '댓글 반응 좋던데요, 우리',
+  '스트레칭 한번 하고…',
+  '오늘도 무사히 발행 완료~',
+  '간식 선반에 뭐 새로 들어왔나',
+];
+const REACTIONS = [
+  '아… 너무 썰렁해요 🥶',
+  'ㅋㅋㅋㅋ 아 진짜',
+  '그거 지난주에도 하셨잖아요',
+  '저 일하러 갈게요…',
+  '개그 검수 반려입니다',
+  '푸흡… 아니 안 웃겼어요',
+  '라면이나 드세요',
+  '재밌…네요 (동공지진)',
+];
+const ROLE_LINES = {
+  chief:      ['우리 편집국 요즘 실적 좋아', '다들 쉬엄쉬엄 해~', '결재할 게 없으니 심심하군'],
+  researcher: ['방금 흥미로운 기사 봤는데…', '팩트는 체크해야 제맛이지'],
+  writer:     ['문장이 자꾸 머릿속에 맴돌아', '오늘은 글이 잘 써질 것 같아'],
+  designer:   ['파란색은 언제 봐도 예뻐', '픽셀 하나가 아쉽단 말이지'],
+  reviewer:   ['쉬는 중에도 오타가 보여…', '완벽한 카드란 없는 걸까'],
+  publisher:  ['좋아요 알림 소리 참 좋다', '다음 게시물 각 잡아야지'],
+};
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+let chatBusy = false;
+function say(role, text, ms) {
+  const el = chars[role].el.querySelector('.p-chat');
+  el.textContent = text;
+  el.classList.add('on');
+  setTimeout(() => el.classList.remove('on'), ms);
+}
+function isResting(c) { return (c.state === 'idle' || c.state === 'done') && !c.queue.length; }
+
+setInterval(() => {
+  if (chatBusy || Math.random() < 0.4) return;
+  const rest = Object.entries(chars).filter(([, c]) => isResting(c));
+  if (!rest.length) return;
+
+  // 가까이 있는 두 명이면 아재개그 만담
+  let pair = null;
+  for (let i = 0; i < rest.length && !pair; i++)
+    for (let j = i + 1; j < rest.length; j++) {
+      const A = rest[i][1], B = rest[j][1];
+      if (Math.hypot(A.x - B.x, A.y - B.y) < 240) { pair = [rest[i][0], rest[j][0]]; break; }
+    }
+
+  chatBusy = true;
+  if (pair && Math.random() < 0.75) {
+    const [a, b] = Math.random() < 0.5 ? pair : [pair[1], pair[0]];
+    const joke = pick(JOKES);
+    say(a, joke.q, 3600);
+    setTimeout(() => say(a, joke.p + ' 😆', 3200), 3800);
+    setTimeout(() => say(b, pick(REACTIONS), 3200), 7300);
+    setTimeout(() => { chatBusy = false; }, 11000);
+  } else {
+    const [role] = pick(rest);
+    const pool = Math.random() < 0.4 && ROLE_LINES[role] ? ROLE_LINES[role] : SMALLTALK;
+    say(role, pick(pool), 4500);
+    setTimeout(() => { chatBusy = false; }, 6500);
+  }
+}, 8000);
 
 // ---------- 스케일/시작 ----------
 function fit() {
