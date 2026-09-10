@@ -16,14 +16,14 @@
   .top .topic { background:#1454FF; padding:8px 20px; border-radius:999px; font-size:14px; font-weight:700; }
 
   #stage-wrap { width:100%; overflow:hidden; }
+  /* 레고 베이스플레이트 바닥 */
   #stage {
     position:relative; width:1200px; height:680px;
     transform-origin:top left;
-    background:
-      repeating-linear-gradient(0deg, transparent 0 38px, rgba(20,84,255,.04) 38px 40px),
-      repeating-linear-gradient(90deg, transparent 0 38px, rgba(20,84,255,.04) 38px 40px),
-      #e9edf6;
-    border:10px solid #26355c; border-radius:14px;
+    background-color:#e2e6ec;
+    background-image:radial-gradient(circle at 8px 8px, rgba(255,255,255,.55) 3.2px, rgba(90,100,130,.10) 4px, transparent 4.8px);
+    background-size:26px 26px;
+    border:10px solid #1f2b4d; border-radius:18px;
   }
 
   /* ---- 벽/창문 ---- */
@@ -35,56 +35,124 @@
   .window::after { content:''; position:absolute; left:50%; top:0; bottom:0; width:3px; background:#7d8db0; }
 
   /* ---- 구역 ---- */
-  .room { position:absolute; border:8px solid #26355c; }
+  /* 구역 = 색깔 베이스플레이트 (스터드 포함) */
+  .plate {
+    background-image:radial-gradient(circle at 7px 7px, rgba(255,255,255,.4) 2.8px, rgba(0,0,0,.06) 3.5px, transparent 4.2px);
+    background-size:24px 24px;
+  }
+  .room { position:absolute; border:8px solid #1f2b4d; }
   #chief-room {
     left:880px; top:42px; width:320px; height:225px; border-right:none; border-top:none;
-    background:repeating-linear-gradient(90deg, #d9c9ad 0 26px, #d1bfa0 26px 52px);
+    background-color:#ead9b8; border-radius:0 0 0 16px;
   }
-  #chief-room .door { position:absolute; left:-8px; top:100px; width:8px; height:64px; background:#c9a86a; box-shadow:inset 0 0 0 2px #a3854e; }
+  #chief-room .door { position:absolute; left:-8px; top:100px; width:8px; height:64px; background:#e2b04a; box-shadow:inset 0 0 0 2px #b98b2e; }
   #break-room {
     left:0px; top:375px; width:305px; height:305px; border-left:none; border-bottom:none;
-    background:repeating-conic-gradient(#f2f2ee 0 25%, #e6e4da 0 50%) 0 0/44px 44px;
+    background-color:#f6ebd3; border-radius:0 16px 0 0;
   }
-  #break-room .door { position:absolute; right:-8px; top:60px; width:8px; height:64px; background:#c9a86a; box-shadow:inset 0 0 0 2px #a3854e; }
+  #break-room .door { position:absolute; right:-8px; top:60px; width:8px; height:64px; background:#e2b04a; box-shadow:inset 0 0 0 2px #b98b2e; }
   .room-label {
-    position:absolute; background:#26355c; color:#fff;
-    font-size:11px; font-weight:700; padding:3px 10px; border-radius:6px; z-index:500;
+    position:absolute; background:#1f2b4d; color:#fff;
+    font-size:11px; font-weight:700; padding:4px 12px; border-radius:99px; z-index:500;
+    box-shadow:0 2px 0 rgba(0,0,0,.2);
   }
-  .zone-rug { position:absolute; border-radius:14px; }
-  #office-rug { left:330px; top:80px; width:470px; height:260px; background:rgba(20,84,255,.08); border:3px dashed rgba(20,84,255,.18); }
-  #lounge-rug { left:355px; top:470px; width:290px; height:185px; background:#d8c7e8; box-shadow:inset 0 0 0 6px #c7b3dc; }
-  #pp-rug { left:680px; top:430px; width:490px; height:225px; background:#cfe3d2; box-shadow:inset 0 0 0 6px #b8d4bc; }
+  .zone-rug { position:absolute; border-radius:16px; }
+  #lounge-rug { left:355px; top:470px; width:290px; height:185px; background-color:#dccbee; box-shadow:inset 0 0 0 5px #c5aede; }
+  #pp-rug { left:680px; top:430px; width:490px; height:225px; background-color:#cfe6d3; box-shadow:inset 0 0 0 5px #aed3b5; }
 
   /* ---- 소품 ---- */
   .prop { position:absolute; line-height:1; z-index:5; }
+  /* 레고 브릭 공통: 밝은 색 + 스터드 + 아랫단 그림자 */
+  .brick-studs {
+    background-image:radial-gradient(circle at 5px 5px, rgba(255,255,255,.35) 2.2px, transparent 2.8px);
+    background-size:14px 14px;
+  }
+
+  /* 데스크 아일랜드 (회사식 2열 배치) */
+  .island {
+    position:absolute; height:44px; border-radius:8px;
+    background-color:#c08c55;
+    background-image:radial-gradient(circle at 6px 6px, rgba(255,255,255,.3) 2.6px, transparent 3.2px);
+    background-size:17px 17px;
+    box-shadow:0 6px 0 #96693e, inset 0 2px 0 rgba(255,255,255,.35);
+  }
+  .ws { position:absolute; }
+  .ws .monitor {
+    position:absolute; left:50%; transform:translateX(-50%); top:0;
+    width:30px; height:20px; background:#1c2333; border:3px solid #3a465f; border-radius:4px;
+  }
+  .ws .monitor::after { content:''; position:absolute; left:50%; bottom:-6px; transform:translateX(-50%); width:8px; height:4px; background:#3a465f; }
+  .ws.on .monitor { background:#1454FF; box-shadow:0 0 14px #1454FF; }
+  .ws .ws-label {
+    position:absolute; left:50%; transform:translateX(-50%);
+    font-size:10px; font-weight:700; color:#4a5878; white-space:nowrap;
+    background:rgba(255,255,255,.85); padding:1px 7px; border-radius:99px;
+  }
+  .divider { position:absolute; width:4px; height:56px; background:#9aa6c0; border-radius:2px; box-shadow:0 3px 0 #7d8aa8; }
+  .chair {
+    position:absolute; width:24px; height:10px; background:#3d4a68; border-radius:5px;
+    box-shadow:0 3px 0 #2c3550, inset 0 2px 0 rgba(255,255,255,.15); z-index:3;
+  }
+  .chair::after {
+    content:''; position:absolute; top:-9px; left:3px; width:18px; height:9px;
+    background:#2c3550; border-radius:5px 5px 0 0;
+  }
+
+  /* 편집장 책상 */
   .desk {
-    position:absolute; width:82px; height:42px;
-    background:#a5794e; border-radius:6px;
-    box-shadow:0 5px 0 #7d5936, inset 0 2px 0 rgba(255,255,255,.25);
+    position:absolute; width:88px; height:44px;
+    background-color:#c08c55;
+    background-image:radial-gradient(circle at 6px 6px, rgba(255,255,255,.3) 2.6px, transparent 3.2px);
+    background-size:17px 17px;
+    border-radius:8px;
+    box-shadow:0 6px 0 #96693e, inset 0 2px 0 rgba(255,255,255,.35);
   }
   .desk .monitor {
-    position:absolute; left:50%; transform:translateX(-50%); top:-15px;
-    width:27px; height:19px; background:#1c2333; border:2px solid #3a465f; border-radius:3px;
+    position:absolute; left:50%; transform:translateX(-50%); top:-16px;
+    width:30px; height:20px; background:#1c2333; border:3px solid #3a465f; border-radius:4px;
   }
-  .desk.on .monitor { background:#1454FF; box-shadow:0 0 12px #1454FF; }
-  .desk .kb { position:absolute; left:14px; bottom:8px; width:22px; height:8px; background:#e8e8ee; border-radius:2px; }
-  .desk .doc { position:absolute; right:10px; bottom:7px; width:14px; height:10px; background:#fff; border-radius:1px; box-shadow:2px -2px 0 #ffe9a8; }
+  .desk.on .monitor { background:#1454FF; box-shadow:0 0 14px #1454FF; }
   .desk .desk-label {
-    position:absolute; top:47px; left:50%; transform:translateX(-50%);
-    font-size:10px; font-weight:700; color:#5a6884; white-space:nowrap; background:rgba(255,255,255,.7); padding:0 5px; border-radius:99px;
+    position:absolute; top:50px; left:50%; transform:translateX(-50%);
+    font-size:10px; font-weight:700; color:#4a5878; white-space:nowrap; background:rgba(255,255,255,.85); padding:1px 7px; border-radius:99px;
   }
-  .fridge { position:absolute; width:40px; height:64px; background:#e8ecf2; border:3px solid #b9c2d4; border-radius:5px; }
-  .fridge::before { content:''; position:absolute; top:22px; left:0; right:0; height:3px; background:#b9c2d4; }
-  .fridge::after { content:''; position:absolute; top:8px; right:4px; width:3px; height:10px; background:#8b98b8; }
-  .coffee-machine { position:absolute; width:34px; height:50px; background:#8b3a3a; border-radius:4px; box-shadow:inset 0 6px 0 rgba(255,255,255,.2); }
-  .coffee-machine::after { content:'☕'; position:absolute; top:15px; left:50%; transform:translateX(-50%); font-size:14px; }
-  .microwave { position:absolute; width:44px; height:28px; background:#4a5468; border-radius:4px; }
-  .microwave::after { content:''; position:absolute; left:5px; top:5px; width:24px; height:18px; background:#202636; border-radius:2px; box-shadow:inset 0 0 4px #ffb84d; }
-  .shelf { position:absolute; width:110px; height:66px; background:#c9a86a; border-radius:4px; box-shadow:0 4px 0 #a3854e; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:2px; font-size:16px; padding:4px; }
-  .btable { position:absolute; width:84px; height:56px; background:#c9a86a; border-radius:50%; box-shadow:0 6px 0 #a3854e; z-index:4; }
+
+  /* 레고 화분 */
+  .lego-plant { position:absolute; width:22px; height:30px; z-index:5; }
+  .lego-plant::after {
+    content:''; position:absolute; top:0; left:0; width:22px; height:19px;
+    background:
+      radial-gradient(circle at 6px 10px, #2eae5d 6px, transparent 6.6px),
+      radial-gradient(circle at 15px 7px, #27a052 6px, transparent 6.6px),
+      radial-gradient(circle at 11px 13px, #35b968 6px, transparent 6.6px);
+  }
+  .lego-plant::before {
+    content:''; position:absolute; bottom:0; left:3px; width:16px; height:11px;
+    background:#d14b3c; border-radius:2px; box-shadow:0 3px 0 #a53a2e, inset 0 2px 0 rgba(255,255,255,.3);
+  }
+
+  /* 탕비실 가전 (레고 브릭풍) */
+  .fridge { position:absolute; width:40px; height:66px; background:#eef1f6; border-radius:5px; box-shadow:0 4px 0 #b9c2d4, inset 0 2px 0 #fff, inset 0 -24px 0 #dde3ee; }
+  .fridge::before { content:''; position:absolute; top:24px; left:0; right:0; height:3px; background:#b9c2d4; }
+  .fridge::after { content:''; position:absolute; top:9px; right:5px; width:3px; height:10px; background:#8b98b8; border-radius:2px; }
+  .coffee-machine { position:absolute; width:34px; height:52px; background:#c0453c; border-radius:5px; box-shadow:0 4px 0 #93342d, inset 0 3px 0 rgba(255,255,255,.35); }
+  .coffee-machine::after { content:'☕'; position:absolute; top:16px; left:50%; transform:translateX(-50%); font-size:14px; }
+  .microwave { position:absolute; width:46px; height:28px; background:#5a6784; border-radius:5px; box-shadow:0 3px 0 #45526b, inset 0 2px 0 rgba(255,255,255,.2); }
+  .microwave::after { content:''; position:absolute; left:5px; top:5px; width:26px; height:18px; background:#1e2536; border-radius:3px; box-shadow:inset 0 0 5px #ffb84d; }
+  .shelf {
+    position:absolute; width:112px; height:66px; background-color:#e2b04a;
+    background-image:radial-gradient(circle at 5px 5px, rgba(255,255,255,.35) 2.2px, transparent 2.8px); background-size:14px 14px;
+    border-radius:6px; box-shadow:0 5px 0 #b98b2e, inset 0 2px 0 rgba(255,255,255,.4);
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:2px; font-size:16px; padding:4px;
+  }
+  .btable {
+    position:absolute; width:86px; height:58px; background-color:#e2b04a;
+    background-image:radial-gradient(circle at 6px 6px, rgba(255,255,255,.35) 2.4px, transparent 3px); background-size:15px 15px;
+    border-radius:50%; box-shadow:0 6px 0 #b98b2e, inset 0 2px 0 rgba(255,255,255,.4); z-index:4;
+  }
   .btable::after { content:'🍜  🥤'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:15px; }
-  .vending { position:absolute; width:38px; height:62px; background:#d13c3c; border-radius:4px; box-shadow:inset 0 0 0 3px #a82e2e; }
-  .vending::after { content:'🥤'; position:absolute; top:8px; left:50%; transform:translateX(-50%); font-size:13px; background:#fff3; border-radius:2px; padding:1px 3px; }
+  .vending { position:absolute; width:38px; height:64px; background:#e04444; border-radius:5px; box-shadow:0 4px 0 #ab3030, inset 0 3px 0 rgba(255,255,255,.3); }
+  .vending::after { content:'🥤'; position:absolute; top:9px; left:50%; transform:translateX(-50%); font-size:13px; background:rgba(255,255,255,.25); border-radius:3px; padding:2px 4px; }
 
   .tv-unit { position:absolute; z-index:5; }
   .tv-screen { width:120px; height:66px; background:#131a2b; border:5px solid #2c3550; border-radius:6px; position:relative; overflow:hidden; }
@@ -95,11 +163,19 @@
   }
   @keyframes tvplay { from { background-position:0 0; filter:brightness(.9);} to { background-position:100% 100%; filter:brightness(1.2);} }
   .tv-stand { width:70px; height:8px; background:#4a5468; margin:0 auto; border-radius:0 0 4px 4px; }
-  .sofa { position:absolute; width:170px; height:46px; background:#7a4fb5; border-radius:10px 10px 6px 6px; box-shadow:0 6px 0 #5d3a8e, inset 0 8px 0 #9168c9; z-index:400; }
-  .sofa::before, .sofa::after { content:''; position:absolute; top:-8px; width:14px; height:40px; background:#5d3a8e; border-radius:6px; }
+  .sofa {
+    position:absolute; width:170px; height:46px; background-color:#8154c4;
+    background-image:radial-gradient(circle at 6px 6px, rgba(255,255,255,.25) 2.4px, transparent 3px); background-size:16px 16px;
+    border-radius:12px 12px 7px 7px; box-shadow:0 6px 0 #5d3a8e, inset 0 8px 0 #9a70d6; z-index:400;
+  }
+  .sofa::before, .sofa::after { content:''; position:absolute; top:-8px; width:14px; height:42px; background:#5d3a8e; border-radius:7px; }
   .sofa::before { left:-6px; } .sofa::after { right:-6px; }
 
-  .pp-table { position:absolute; width:190px; height:96px; background:#2f7d4f; border:5px solid #1d5c37; border-radius:8px; z-index:4; }
+  .pp-table {
+    position:absolute; width:190px; height:96px; background-color:#33a05e;
+    background-image:radial-gradient(circle at 7px 7px, rgba(255,255,255,.22) 2.6px, transparent 3.2px); background-size:19px 19px;
+    border:5px solid #1d6b3c; border-radius:10px; box-shadow:0 6px 0 #175530; z-index:4;
+  }
   .pp-table::after { content:''; position:absolute; left:50%; top:-6px; bottom:-6px; width:5px; margin-left:-2px; background:#f2f2f2; border-radius:2px; }
   #ppball { position:absolute; width:9px; height:9px; background:#fff; border-radius:50%; box-shadow:0 1px 2px rgba(0,0,0,.4); z-index:450; display:none; }
   #ppball.play { display:block; animation:rally 0.8s infinite alternate ease-in-out; }
@@ -108,34 +184,53 @@
   .plant2 { font-size:30px; }
 
   /* ---- 캐릭터 ---- */
-  .person { position:absolute; width:32px; height:50px; }
-  .p-inner { position:relative; width:32px; height:50px; }
+  /* ---- 레고 미니피규어 ---- */
+  .person { position:absolute; width:34px; height:56px; }
+  .p-inner { position:relative; width:34px; height:56px; }
   .person.working .p-bob { animation:type-bob .45s infinite alternate; }
   @keyframes type-bob { to { transform:translateY(-2px); } }
-  .p-head { position:relative; width:20px; height:17px; margin:0 auto; border-radius:5px 5px 3px 3px; }
-  .p-hair { position:absolute; top:-2px; left:-1px; right:-1px; height:8px; border-radius:5px 5px 2px 2px; }
-  .p-eyes { position:absolute; bottom:4px; left:4px; width:3px; height:3px; background:#1c1c1c; border-radius:50%; box-shadow:9px 0 0 #1c1c1c; }
-  .p-torso { width:26px; height:17px; margin:-1px auto 0; border-radius:4px; position:relative; }
-  .p-arm { position:absolute; top:2px; width:5px; height:13px; border-radius:3px; }
-  .p-arm.l { left:-4px; } .p-arm.r { right:-4px; }
-  .p-legs { display:flex; justify-content:center; gap:5px; margin-top:-1px; }
-  .p-leg { width:8px; height:13px; background:#2b3a55; border-radius:0 0 3px 3px; transform-origin:top center; }
+  .p-stud { width:10px; height:5px; background:#f2c500; border-radius:3px 3px 0 0; margin:0 auto; box-shadow:inset 0 2px 0 rgba(255,255,255,.5); }
+  .p-head {
+    position:relative; width:20px; height:17px; margin:0 auto;
+    background:#FFD500; border-radius:5px;
+    box-shadow:inset -2px -2px 0 rgba(0,0,0,.1), inset 2px 2px 0 rgba(255,255,255,.35);
+  }
+  .p-hair { position:absolute; top:-3px; left:-2px; right:-2px; height:8px; border-radius:6px 6px 2px 2px; }
+  .p-eyes { position:absolute; top:6px; left:5px; width:3px; height:3px; background:#1c1c1c; border-radius:50%; box-shadow:8px 0 0 #1c1c1c; }
+  .p-smile {
+    position:absolute; bottom:2px; left:50%; transform:translateX(-50%);
+    width:9px; height:5px; border:2px solid #1c1c1c; border-top:none;
+    border-left-color:transparent; border-right-color:transparent; border-radius:0 0 9px 9px;
+  }
+  .p-body { position:relative; width:34px; height:17px; margin-top:0px; }
+  .p-torso {
+    width:28px; height:17px; margin:0 auto;
+    clip-path:polygon(16% 0, 84% 0, 100% 100%, 0 100%);
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.3);
+  }
+  .p-arm { position:absolute; top:2px; width:6px; height:12px; border-radius:3px; }
+  .p-arm.l { left:0; transform:rotate(10deg); } .p-arm.r { right:0; transform:rotate(-10deg); }
+  .p-hand { position:absolute; top:13px; width:6px; height:6px; background:#FFD500; border-radius:50%; }
+  .p-hand.l { left:0; } .p-hand.r { right:0; }
+  .p-hip { width:24px; height:5px; background:#26324e; margin:0 auto; border-radius:1px; }
+  .p-legs { display:flex; justify-content:center; gap:3px; }
+  .p-leg { width:10px; height:12px; background:#2f3d5e; border-radius:0 0 3px 3px; transform-origin:top center; box-shadow:inset 0 -3px 0 #26324e; }
   .person.walk .p-leg.l { animation:step .3s infinite alternate; }
   .person.walk .p-leg.r { animation:step .3s infinite alternate-reverse; }
   @keyframes step { from { transform:rotate(18deg); } to { transform:rotate(-18deg); } }
   .person.sitting .p-leg { height:6px; }
   .person.sitting { transform:translateY(4px); }
-  .p-shadow { position:absolute; bottom:-3px; left:50%; transform:translateX(-50%); width:26px; height:7px; background:rgba(0,0,0,.18); border-radius:50%; }
+  .p-shadow { position:absolute; bottom:-3px; left:50%; transform:translateX(-50%); width:28px; height:7px; background:rgba(0,0,0,.18); border-radius:50%; }
   .p-name {
-    position:absolute; top:52px; left:50%; transform:translateX(-50%);
-    font-size:10px; font-weight:800; color:#26355c; background:rgba(255,255,255,.88);
-    padding:1px 6px; border-radius:99px; white-space:nowrap;
+    position:absolute; top:58px; left:50%; transform:translateX(-50%);
+    font-size:10px; font-weight:800; color:#26355c; background:rgba(255,255,255,.9);
+    padding:1px 7px; border-radius:99px; white-space:nowrap; box-shadow:0 1px 0 rgba(0,0,0,.1);
   }
-  .p-item { position:absolute; top:14px; right:-14px; font-size:15px; display:none; }
+  .p-item { position:absolute; top:16px; right:-14px; font-size:15px; display:none; }
   .person.leisure .p-item { display:block; animation:munch .7s infinite alternate; }
   @keyframes munch { from { transform:translateY(0) rotate(0);} to { transform:translateY(-3px) rotate(-12deg);} }
   .p-bubble {
-    position:absolute; bottom:56px; left:50%; transform:translateX(-50%);
+    position:absolute; bottom:62px; left:50%; transform:translateX(-50%);
     background:#fff; border:2px solid #26355c; border-radius:8px;
     font-size:11px; font-weight:600; padding:4px 8px; white-space:nowrap;
     max-width:230px; overflow:hidden; text-overflow:ellipsis;
@@ -238,47 +333,48 @@
       <div class="window" style="left:700px"></div>
       <div class="window" style="left:1020px"></div>
 
-      <div class="zone-rug" id="office-rug"></div>
-      <div class="zone-rug" id="lounge-rug"></div>
-      <div class="zone-rug" id="pp-rug"></div>
+      <div class="zone-rug plate" id="lounge-rug"></div>
+      <div class="zone-rug plate" id="pp-rug"></div>
 
-      <div class="room" id="chief-room"><div class="door"></div></div>
-      <div class="room" id="break-room"><div class="door"></div></div>
+      <div class="room plate" id="chief-room"><div class="door"></div></div>
+      <div class="room plate" id="break-room"><div class="door"></div></div>
       <div class="room-label" style="left:900px; top:52px;">👔 편집장실</div>
       <div class="room-label" style="left:12px; top:645px;">🍜 탕비실</div>
       <div class="room-label" style="left:370px; top:478px;">🎮 라운지</div>
       <div class="room-label" style="left:695px; top:438px;">🏓 탁구장</div>
 
-      <div class="prop" style="left:1130px; top:70px; font-size:26px;">🏆</div>
-      <div class="prop" style="left:900px; top:70px; font-size:26px;">📚</div>
-      <div class="prop plant2" style="left:1140px; top:215px;">🪴</div>
-      <div class="prop" style="left:930px; top:210px; font-size:22px;">🗄️</div>
+      <!-- 편집장실 -->
+      <div class="prop" style="left:1130px; top:70px; font-size:24px;">🏆</div>
+      <div class="lego-plant" style="left:1145px; top:210px;"></div>
+      <div class="lego-plant" style="left:895px; top:70px;"></div>
 
+      <!-- 탕비실 -->
       <div class="fridge" style="left:20px; top:395px;"></div>
       <div class="coffee-machine" style="left:75px; top:405px;"></div>
-      <div class="microwave" style="left:122px; top:425px;"></div>
+      <div class="microwave" style="left:122px; top:428px;"></div>
       <div class="shelf" style="left:180px; top:395px;">🍜🍜🍫🍪🥫🧃</div>
       <div class="vending" style="left:255px; top:520px;"></div>
       <div class="btable" style="left:95px; top:530px;"></div>
-      <div class="prop" style="left:20px; top:600px; font-size:24px;">🧊</div>
-      <div class="prop plant2" style="left:255px; top:610px;">🪴</div>
+      <div class="lego-plant" style="left:24px; top:600px;"></div>
 
+      <!-- 라운지 -->
       <div class="tv-unit" style="left:400px; top:492px;">
         <div class="tv-screen" id="tv"></div>
         <div class="tv-stand"></div>
       </div>
       <div class="sofa" style="left:395px; top:585px;"></div>
-      <div class="prop" style="left:560px; top:500px; font-size:22px;">🕹️</div>
-      <div class="prop plant2" style="left:600px; top:615px;">🪴</div>
+      <div class="prop" style="left:565px; top:500px; font-size:22px;">🕹️</div>
+      <div class="lego-plant" style="left:604px; top:612px;"></div>
 
+      <!-- 탁구장 -->
       <div class="pp-table" id="pptable" style="left:790px; top:490px;"></div>
       <div id="ppball" style="left:800px; top:505px;"></div>
-      <div class="prop" style="left:1120px; top:450px; font-size:22px;">🏓</div>
-      <div class="prop plant2" style="left:1130px; top:610px;">🪴</div>
+      <div class="prop" style="left:1122px; top:452px; font-size:22px;">🏓</div>
+      <div class="lego-plant" style="left:1132px; top:606px;"></div>
 
-      <div class="prop plant2" style="left:310px; top:52px;">🪴</div>
-      <div class="prop" style="left:820px; top:300px; font-size:24px;">🖨️</div>
-      <div class="prop" style="left:640px; top:390px; font-size:22px;">🚰</div>
+      <!-- 플로어 -->
+      <div class="lego-plant" style="left:312px; top:58px;"></div>
+      <div class="lego-plant" style="left:832px; top:300px;"></div>
     </div>
   </div>
 
@@ -340,12 +436,16 @@ const ROLES = {
   reviewer:   { name:'개빡빡', role:'검수자',  shirt:'#0a9d58', hair:'#3d3d3d', skin:'#e8b98a' },
   publisher:  { name:'막뿌려', role:'발행인',  shirt:'#e07b00', hair:'#111', skin:'#ffd9b0' },
 };
-const DESKS = {
-  researcher: { x:360, y:110 }, writer: { x:560, y:110 },
-  designer:   { x:360, y:250 }, reviewer: { x:560, y:250 },
-  publisher:  { x:700, y:180 }, chief: { x:1000, y:120 },
+// 회사식 2열 데스크 아일랜드: A열(위) 3석 + B열(아래) 2석, 편집장은 별실
+const ISLANDS = { A: { x:340, y:150, w:470 }, B: { x:340, y:250, w:470 } };
+const SEATS = {
+  researcher: { x:405, row:'A' }, writer: { x:575, row:'A' }, designer: { x:745, row:'A' },
+  reviewer:   { x:470, row:'B' }, publisher: { x:680, row:'B' },
 };
-const workPos = (d) => ({ x:d.x+41, y:d.y+24 });
+const CHIEF_DESK = { x:1000, y:120 };
+const workPos = (role) => role === 'chief'
+  ? { x: CHIEF_DESK.x + 44, y: CHIEF_DESK.y + 24 }
+  : { x: SEATS[role].x, y: ISLANDS[SEATS[role].row].y + 18 };
 const LEISURE = [
   { id:'eat1',  x:85,  y:545, act:'eat' },
   { id:'eat2',  x:195, y:545, act:'eat' },
@@ -364,7 +464,7 @@ const inBreak = (p) => p.x < 315 && p.y > 365;
 const inChief = (p) => p.x > 865 && p.y < 275;
 const BREAK_DOOR_OUT = {x:340,y:467}, BREAK_DOOR_IN = {x:270,y:467};
 const CHIEF_DOOR_OUT = {x:845,y:135}, CHIEF_DOOR_IN = {x:915,y:135};
-const PATROL = [ {x:460,y:200},{x:660,y:200},{x:660,y:340},{x:460,y:340},{x:740,y:280} ];
+const PATROL = [ {x:360,y:340},{x:850,y:340},{x:850,y:110},{x:360,y:110},{x:600,y:400} ];
 
 function route(from, to) {
   const wp = [];
@@ -377,13 +477,47 @@ function route(from, to) {
 }
 
 const stage = document.getElementById('stage');
-for (const [role, d] of Object.entries(DESKS)) {
+// 데스크 아일랜드 2개 + 파티션
+for (const [key, isl] of Object.entries(ISLANDS)) {
   const el = document.createElement('div');
-  el.className = 'desk'; el.id = 'desk-' + role;
-  el.style.left = d.x + 'px'; el.style.top = d.y + 'px';
-  el.style.zIndex = d.y + 62;
-  el.innerHTML = `<div class="monitor"></div><div class="kb"></div><div class="doc"></div>
-    <div class="desk-label">${ROLES[role].name} · ${ROLES[role].role}</div>`;
+  el.className = 'island';
+  el.style.left = isl.x + 'px'; el.style.top = isl.y + 'px'; el.style.width = isl.w + 'px';
+  el.style.zIndex = isl.y + 60;
+  stage.appendChild(el);
+  // 좌석 사이 파티션
+  const seats = Object.values(SEATS).filter(s => s.row === key).map(s => s.x).sort((a, b) => a - b);
+  for (let i = 0; i < seats.length - 1; i++) {
+    const dv = document.createElement('div');
+    dv.className = 'divider';
+    dv.style.left = ((seats[i] + seats[i + 1]) / 2) + 'px';
+    dv.style.top = (isl.y - 8) + 'px';
+    dv.style.zIndex = isl.y + 61;
+    stage.appendChild(dv);
+  }
+}
+// 좌석별 워크스테이션 (모니터 + 이름표 + 의자)
+for (const [role, s] of Object.entries(SEATS)) {
+  const isl = ISLANDS[s.row];
+  const ws = document.createElement('div');
+  ws.className = 'ws'; ws.id = 'desk-' + role;
+  ws.style.left = s.x + 'px'; ws.style.top = isl.y + 'px';
+  ws.style.zIndex = isl.y + 62;
+  ws.innerHTML = `<div class="monitor" style="top:8px"></div>
+    <div class="ws-label" style="top:50px">${ROLES[role].name} · ${ROLES[role].role}</div>`;
+  stage.appendChild(ws);
+  const chair = document.createElement('div');
+  chair.className = 'chair';
+  chair.style.left = (s.x - 12) + 'px';
+  chair.style.top = (isl.y - 24) + 'px';
+  stage.appendChild(chair);
+}
+// 편집장 책상
+{
+  const el = document.createElement('div');
+  el.className = 'desk'; el.id = 'desk-chief';
+  el.style.left = CHIEF_DESK.x + 'px'; el.style.top = CHIEF_DESK.y + 'px';
+  el.style.zIndex = CHIEF_DESK.y + 62;
+  el.innerHTML = `<div class="monitor"></div><div class="desk-label">${ROLES.chief.name} · ${ROLES.chief.role}</div>`;
   stage.appendChild(el);
 }
 
@@ -395,17 +529,22 @@ Object.entries(ROLES).forEach(([role, cfg], i) => {
   el.innerHTML = `
     <div class="p-bubble"></div>
     <div class="p-inner"><div class="p-bob">
-      <div class="p-head" style="background:${cfg.skin}"><div class="p-hair" style="background:${cfg.hair}"></div><div class="p-eyes"></div></div>
-      <div class="p-torso" style="background:${cfg.shirt}">
-        <div class="p-arm l" style="background:${cfg.shirt}"></div><div class="p-arm r" style="background:${cfg.shirt}"></div>
+      <div class="p-stud"></div>
+      <div class="p-head"><div class="p-hair" style="background:${cfg.hair}"></div><div class="p-eyes"></div><div class="p-smile"></div></div>
+      <div class="p-body">
+        <div class="p-arm l" style="background:${cfg.shirt}"></div>
+        <div class="p-arm r" style="background:${cfg.shirt}"></div>
+        <div class="p-torso" style="background:${cfg.shirt}"></div>
+        <div class="p-hand l"></div><div class="p-hand r"></div>
       </div>
+      <div class="p-hip"></div>
       <div class="p-legs"><div class="p-leg l"></div><div class="p-leg r"></div></div>
     </div></div>
     <div class="p-shadow"></div>
     <div class="p-item"></div>
     <div class="p-name">${cfg.name}</div>`;
   stage.appendChild(el);
-  const spot = role === 'chief' ? workPos(DESKS.chief) : LEISURE[i % LEISURE.length];
+  const spot = role === 'chief' ? workPos('chief') : LEISURE[i % LEISURE.length];
   chars[role] = { el, x:spot.x, y:spot.y, queue:[], state:'', wanderAt:0, patrolIdx:0, spot:null };
 });
 
@@ -450,9 +589,9 @@ async function fetchStatus() {
       if (a.state === 'working' || a.state === 'error') {
         releaseSpot(role);
         if (role === 'chief') { c.queue = route({x:c.x,y:c.y}, PATROL[0]); c.patrolIdx = 0; }
-        else c.queue = route({x:c.x,y:c.y}, workPos(DESKS[role]));
+        else c.queue = route({x:c.x,y:c.y}, workPos(role));
       } else {
-        if (role === 'chief') c.queue = route({x:c.x,y:c.y}, workPos(DESKS.chief));
+        if (role === 'chief') c.queue = route({x:c.x,y:c.y}, workPos('chief'));
         else claimLeisure(role);
         if (a.state === 'done' && a.msg) {
           c.el.classList.add('show-bubble');
@@ -504,8 +643,8 @@ function tick() {
       }
     }
     c.el.classList.toggle('working', (c.state === 'working') && !c.queue.length && role !== 'chief');
-    c.el.style.left = (c.x - 16) + 'px';
-    c.el.style.top = (c.y - 50) + 'px';
+    c.el.style.left = (c.x - 17) + 'px';
+    c.el.style.top = (c.y - 56) + 'px';
     c.el.style.zIndex = Math.round(c.y);
   }
 
