@@ -16,13 +16,10 @@
   .top .topic { background:#1454FF; padding:8px 20px; border-radius:999px; font-size:14px; font-weight:700; }
 
   #stage-wrap { width:100%; overflow:hidden; }
-  /* 레고 베이스플레이트 바닥 */
   #stage {
     position:relative; width:1200px; height:680px;
     transform-origin:top left;
-    background-color:#e2e6ec;
-    background-image:radial-gradient(circle at 8px 8px, rgba(255,255,255,.55) 3.2px, rgba(90,100,130,.10) 4px, transparent 4.8px);
-    background-size:26px 26px;
+    background:linear-gradient(#edeff4, #e6e9ef);
     border:10px solid #1f2b4d; border-radius:18px;
   }
 
@@ -42,15 +39,25 @@
   }
   .room { position:absolute; border:8px solid #1f2b4d; }
   #chief-room {
-    left:880px; top:42px; width:320px; height:225px; border-right:none; border-top:none;
+    left:880px; top:42px; width:300px; height:225px; border-right:none; border-top:none;
     background-color:#ead9b8; border-radius:0 0 0 16px;
   }
-  #chief-room .door { position:absolute; left:-8px; top:100px; width:8px; height:64px; background:#e2b04a; box-shadow:inset 0 0 0 2px #b98b2e; }
+  #chief-room .door {
+    position:absolute; left:-8px; top:100px; width:8px; height:64px;
+    background:#e2b04a; box-shadow:inset 0 0 0 2px #b98b2e; border-radius:2px;
+    transform-origin:50% 0%; transition:transform .3s ease;
+  }
+  #chief-room .door.open { transform:rotate(68deg); }
   #break-room {
-    left:0px; top:375px; width:305px; height:305px; border-left:none; border-bottom:none;
+    left:0px; top:375px; width:305px; height:285px; border-left:none; border-bottom:none;
     background-color:#f6ebd3; border-radius:0 16px 0 0;
   }
-  #break-room .door { position:absolute; right:-8px; top:60px; width:8px; height:64px; background:#e2b04a; box-shadow:inset 0 0 0 2px #b98b2e; }
+  #break-room .door {
+    position:absolute; right:-8px; top:60px; width:8px; height:64px;
+    background:#e2b04a; box-shadow:inset 0 0 0 2px #b98b2e; border-radius:2px;
+    transform-origin:50% 0%; transition:transform .3s ease;
+  }
+  #break-room .door.open { transform:rotate(-68deg); }
   .room-label {
     position:absolute; background:#1f2b4d; color:#fff;
     font-size:11px; font-weight:700; padding:4px 12px; border-radius:99px; z-index:500;
@@ -140,28 +147,40 @@
   .microwave { position:absolute; width:46px; height:28px; background:#5a6784; border-radius:5px; box-shadow:0 3px 0 #45526b, inset 0 2px 0 rgba(255,255,255,.2); }
   .microwave::after { content:''; position:absolute; left:5px; top:5px; width:26px; height:18px; background:#1e2536; border-radius:3px; box-shadow:inset 0 0 5px #ffb84d; }
   .shelf {
-    position:absolute; width:112px; height:66px; background-color:#e2b04a;
+    position:absolute; width:118px; height:72px; background-color:#e2b04a;
     background-image:radial-gradient(circle at 5px 5px, rgba(255,255,255,.35) 2.2px, transparent 2.8px); background-size:14px 14px;
-    border-radius:6px; box-shadow:0 5px 0 #b98b2e, inset 0 2px 0 rgba(255,255,255,.4);
-    display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:2px; font-size:16px; padding:4px;
+    border-radius:8px; box-shadow:0 5px 0 #b98b2e, inset 0 2px 0 rgba(255,255,255,.4);
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:3px; font-size:24px; padding:4px;
+    text-shadow:0 2px 3px rgba(0,0,0,.2);
   }
   .btable {
-    position:absolute; width:86px; height:58px; background-color:#e2b04a;
+    position:absolute; width:96px; height:66px; background-color:#e2b04a;
     background-image:radial-gradient(circle at 6px 6px, rgba(255,255,255,.35) 2.4px, transparent 3px); background-size:15px 15px;
     border-radius:50%; box-shadow:0 6px 0 #b98b2e, inset 0 2px 0 rgba(255,255,255,.4); z-index:4;
   }
-  .btable::after { content:'🍜  🥤'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:15px; }
+  .btable::after {
+    content:'🍜 🍩 🥤'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:22px; text-shadow:0 2px 3px rgba(0,0,0,.2);
+  }
   .vending { position:absolute; width:38px; height:64px; background:#e04444; border-radius:5px; box-shadow:0 4px 0 #ab3030, inset 0 3px 0 rgba(255,255,255,.3); }
   .vending::after { content:'🥤'; position:absolute; top:9px; left:50%; transform:translateX(-50%); font-size:13px; background:rgba(255,255,255,.25); border-radius:3px; padding:2px 4px; }
 
   .tv-unit { position:absolute; z-index:5; }
   .tv-screen { width:120px; height:66px; background:#131a2b; border:5px solid #2c3550; border-radius:6px; position:relative; overflow:hidden; }
-  .tv-screen.on::after {
-    content:''; position:absolute; inset:4px; border-radius:3px;
-    background:linear-gradient(120deg,#3ddc84,#1454FF,#c2437e); background-size:300% 300%;
-    animation:tvplay 1.6s infinite alternate;
+  /* TV 게임 화면: 미니 퐁 게임 */
+  .tv-screen.on { background:#0a1233; }
+  .tv-screen.on::before {
+    content:''; position:absolute; left:10px; top:8px; width:6px; height:6px;
+    background:#fff; border-radius:50%; box-shadow:0 0 6px #fff;
+    animation:tvball 1.3s infinite alternate ease-in-out;
   }
-  @keyframes tvplay { from { background-position:0 0; filter:brightness(.9);} to { background-position:100% 100%; filter:brightness(1.2);} }
+  .tv-screen.on::after {
+    content:''; position:absolute; left:5px; top:18px; width:5px; height:20px;
+    background:#3ddc84; border-radius:2px; box-shadow:95px 4px 0 #ff5d5d;
+    animation:tvpaddle 1.3s infinite alternate ease-in-out;
+  }
+  @keyframes tvball { from { transform:translate(0,4px);} to { transform:translate(86px,32px);} }
+  @keyframes tvpaddle { from { transform:translateY(-8px);} to { transform:translateY(12px);} }
   .tv-stand { width:70px; height:8px; background:#4a5468; margin:0 auto; border-radius:0 0 4px 4px; }
   .sofa {
     position:absolute; width:170px; height:46px; background-color:#8154c4;
@@ -178,8 +197,14 @@
   }
   .pp-table::after { content:''; position:absolute; left:50%; top:-6px; bottom:-6px; width:5px; margin-left:-2px; background:#f2f2f2; border-radius:2px; }
   #ppball { position:absolute; width:9px; height:9px; background:#fff; border-radius:50%; box-shadow:0 1px 2px rgba(0,0,0,.4); z-index:450; display:none; }
-  #ppball.play { display:block; animation:rally 0.8s infinite alternate ease-in-out; }
+  #ppball.play, #ppball.solo-L, #ppball.solo-R { display:block; }
+  #ppball.play { animation:rally 0.8s infinite alternate ease-in-out; }
   @keyframes rally { from { transform:translate(0,0);} 50% { transform:translate(80px,-16px);} to { transform:translate(160px,0);} }
+  /* 혼자 연습: 자기 쪽 코트에서 통통 */
+  #ppball.solo-L { animation:practiceL 0.55s infinite alternate ease-in; }
+  @keyframes practiceL { from { transform:translate(2px,2px);} to { transform:translate(62px,-22px);} }
+  #ppball.solo-R { animation:practiceR 0.55s infinite alternate ease-in; }
+  @keyframes practiceR { from { transform:translate(160px,2px);} to { transform:translate(100px,-22px);} }
 
   .plant2 { font-size:30px; }
 
@@ -226,7 +251,7 @@
     font-size:10px; font-weight:800; color:#26355c; background:rgba(255,255,255,.9);
     padding:1px 7px; border-radius:99px; white-space:nowrap; box-shadow:0 1px 0 rgba(0,0,0,.1);
   }
-  .p-item { position:absolute; top:16px; right:-14px; font-size:15px; display:none; }
+  .p-item { position:absolute; top:12px; right:-18px; font-size:21px; display:none; filter:drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
   .person.leisure .p-item { display:block; animation:munch .7s infinite alternate; }
   @keyframes munch { from { transform:translateY(0) rotate(0);} to { transform:translateY(-3px) rotate(-12deg);} }
   .p-bubble {
@@ -339,7 +364,7 @@
       <div class="room plate" id="chief-room"><div class="door"></div></div>
       <div class="room plate" id="break-room"><div class="door"></div></div>
       <div class="room-label" style="left:900px; top:52px;">👔 편집장실</div>
-      <div class="room-label" style="left:12px; top:645px;">🍜 탕비실</div>
+      <div class="room-label" style="left:12px; top:628px;">🍜 탕비실</div>
       <div class="room-label" style="left:370px; top:478px;">🎮 라운지</div>
       <div class="room-label" style="left:695px; top:438px;">🏓 탁구장</div>
 
@@ -352,7 +377,7 @@
       <div class="fridge" style="left:20px; top:395px;"></div>
       <div class="coffee-machine" style="left:75px; top:405px;"></div>
       <div class="microwave" style="left:122px; top:428px;"></div>
-      <div class="shelf" style="left:180px; top:395px;">🍜🍜🍫🍪🥫🧃</div>
+      <div class="shelf" style="left:178px; top:392px;">🍜🍕🍩🍪🍫🥤</div>
       <div class="vending" style="left:255px; top:520px;"></div>
       <div class="btable" style="left:95px; top:530px;"></div>
       <div class="lego-plant" style="left:24px; top:600px;"></div>
@@ -463,7 +488,7 @@ const SPEED = 90;
 const inBreak = (p) => p.x < 315 && p.y > 365;
 const inChief = (p) => p.x > 865 && p.y < 275;
 const BREAK_DOOR_OUT = {x:340,y:467}, BREAK_DOOR_IN = {x:270,y:467};
-const CHIEF_DOOR_OUT = {x:845,y:135}, CHIEF_DOOR_IN = {x:915,y:135};
+const CHIEF_DOOR_OUT = {x:845,y:172}, CHIEF_DOOR_IN = {x:915,y:172};
 const PATROL = [ {x:360,y:340},{x:850,y:340},{x:850,y:110},{x:360,y:110},{x:600,y:400} ];
 
 function route(from, to) {
@@ -559,7 +584,13 @@ function claimLeisure(role) {
   const free = freeSpots();
   const spot = free[Math.floor(Math.random() * free.length)] || LEISURE[0];
   occupied[spot.id] = role; c.spot = spot;
-  c.queue = route({x:c.x,y:c.y}, spot);
+  if (spot.act === 'pp') {
+    // 탁구대를 밟지 않게 테이블 아래로 돌아서 접근
+    c.queue = route({x:c.x,y:c.y}, { x: spot.x, y: 606 });
+    c.queue.push({ x: spot.x, y: spot.y });
+  } else {
+    c.queue = route({x:c.x,y:c.y}, spot);
+  }
 }
 
 // ---------- 상태 폴링 ----------
@@ -648,11 +679,24 @@ function tick() {
     c.el.style.zIndex = Math.round(c.y);
   }
 
-  const ppOn = occupied['pp-L'] && occupied['pp-R']
-    && !chars[occupied['pp-L']].queue.length && !chars[occupied['pp-R']].queue.length;
-  document.getElementById('ppball').classList.toggle('play', !!ppOn);
+  // 탁구: 둘이면 랠리, 혼자면 자기 코트에서 연습
+  const ppL = occupied['pp-L'] && !chars[occupied['pp-L']].queue.length;
+  const ppR = occupied['pp-R'] && !chars[occupied['pp-R']].queue.length;
+  const ball = document.getElementById('ppball');
+  ball.classList.toggle('play', !!(ppL && ppR));
+  ball.classList.toggle('solo-L', !!(ppL && !ppR));
+  ball.classList.toggle('solo-R', !!(ppR && !ppL));
   const tvOn = occupied['sofa1'] || occupied['sofa2'];
   document.getElementById('tv').classList.toggle('on', !!tvOn);
+
+  // 문 여닫기: 캐릭터가 문 근처를 지나면 열린다
+  let chiefOpen = false, breakOpen = false;
+  for (const c of Object.values(chars)) {
+    if (Math.hypot(c.x - 876, c.y - 174) < 52) chiefOpen = true;
+    if (Math.hypot(c.x - 309, c.y - 467) < 52) breakOpen = true;
+  }
+  document.querySelector('#chief-room .door').classList.toggle('open', chiefOpen);
+  document.querySelector('#break-room .door').classList.toggle('open', breakOpen);
 }
 
 // ---------- 갤러리 + 뷰어 ----------
