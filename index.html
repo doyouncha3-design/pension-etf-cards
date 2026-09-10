@@ -304,6 +304,12 @@
   .req-row { font-size:13px; padding:7px 0; border-bottom:1px solid #F1F3F8; display:flex; gap:8px; align-items:center; }
   .req-badge { font-size:11px; font-weight:700; padding:2px 10px; border-radius:99px; white-space:nowrap; }
   .req-badge.pending { background:#fff3d6; color:#a06b00; }
+  .req-badge.approved { background:#e6f0ff; color:#3a6cd8; }
+  .approve-btn {
+    flex:none; background:#0a9d58; color:#fff; border:none; border-radius:8px;
+    padding:4px 12px; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit;
+  }
+  .approve-btn:hover { background:#088a4d; }
   .req-badge.working { background:#dce7ff; color:#1454FF; }
   .req-badge.done { background:#dcf5e7; color:#0a9d58; }
   .req-badge.rejected { background:#fde3e3; color:#c22; }
@@ -773,7 +779,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ---------- 작업 요청 ----------
-const BADGE = { pending:'검토 대기', working:'제작 중', done:'완료', rejected:'보류' };
+const BADGE = { pending:'검토 대기', approved:'승인됨 · 제작 대기', working:'제작 중', done:'완료', rejected:'보류' };
 async function fetchRequests() {
   let reqs;
   try { reqs = await (await sfetch('office_requests?select=*&order=id.desc&limit=8')).json(); }
@@ -782,10 +788,29 @@ async function fetchRequests() {
     `<div class="req-row">
       <span class="req-badge ${r.status}">${BADGE[r.status] || r.status}</span>
       <span style="flex:1">${r.topic.replace(/</g, '&lt;')}${r.requester ? ` <span style="color:#98a2b8;font-size:11px">— ${String(r.requester).replace(/</g, '&lt;')}님</span>` : ''}</span>
+      ${r.status === 'pending' ? `<button class="approve-btn" onclick="approveReq(${r.id})">🔑 승인</button>` : ''}
       ${r.result_url ? `<a href="${r.result_url}" target="_blank" rel="noopener">보기↗</a>` : ''}
     </div>`
   ).join('') || '<div class="req-row">아직 요청이 없습니다</div>';
 }
+
+// 관리자 승인: 비번은 서버(Supabase)에서만 검증된다
+window.approveReq = async (id) => {
+  const pin = prompt('관리자 비밀번호를 입력하세요');
+  if (pin === null) return;
+  try {
+    const res = await sfetch('rpc/office_approve_request', {
+      method: 'POST', body: JSON.stringify({ p_pin: pin, p_id: id }),
+    });
+    const result = await res.json();
+    if (result === 'ok') {
+      document.getElementById('req-msg').textContent = '승인 완료! 편집국이 제작을 시작합니다 ✅';
+      setTimeout(() => document.getElementById('req-msg').textContent = '', 5000);
+    } else if (result === 'wrong_pin') alert('비밀번호가 틀렸습니다');
+    else if (result === 'no_pin') alert('관리자 비밀번호가 아직 설정되지 않았습니다');
+    fetchRequests();
+  } catch (e) { alert('요청 실패 — 잠시 후 다시 시도해주세요'); }
+};
 document.getElementById('req-send').onclick = async () => {
   const input = document.getElementById('req-topic');
   const topic = input.value.trim();
