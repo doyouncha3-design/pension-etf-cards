@@ -190,6 +190,31 @@
   .req-row a { color:#1454FF; font-size:12px; }
 
   /* ---- 업무 일지 ---- */
+  /* 근거 검증실 */
+  #ev-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  .ev-tab {
+    border:2px solid #dfe5f2; background:#fff; border-radius:999px;
+    padding:6px 14px; font-size:12px; font-weight:700; cursor:pointer; color:#5a6884; font-family:inherit;
+  }
+  .ev-tab.on { background:#1454FF; border-color:#1454FF; color:#fff; }
+  .ev-row { display:flex; gap:10px; align-items:flex-start; font-size:13px; padding:8px 0; border-bottom:1px solid #F1F3F8; }
+  .ev-card-badge {
+    flex:none; background:#EEF3FF; color:#1454FF; font-size:11px; font-weight:800;
+    padding:2px 8px; border-radius:6px; margin-top:1px;
+  }
+  .ev-kind { flex:none; font-size:11px; color:#98a2b8; margin-top:2px; width:52px; }
+  .ev-claim { flex:1; line-height:1.45; word-break:keep-all; }
+  .ev-link { flex:none; font-size:12px; font-weight:700; color:#1454FF; text-decoration:none; margin-top:1px; white-space:nowrap; }
+  .ev-link:hover { text-decoration:underline; }
+  #v-evidence {
+    background:rgba(255,255,255,.08); border-radius:12px; padding:10px 16px;
+    max-width:min(92vw, 560px); width:100%; color:#fff; font-size:12px;
+  }
+  #v-evidence .ev-row { border-color:rgba(255,255,255,.12); padding:6px 0; }
+  #v-evidence .ev-link { color:#9fd0ff; }
+  #v-evidence .ev-card-badge { background:rgba(255,255,255,.15); color:#9fd0ff; }
+  #v-ev-title { font-weight:800; font-size:12px; margin-bottom:2px; color:rgba(255,255,255,.75); }
+
   #log-panel { max-height:260px; overflow-y:auto; }
   .journal .entry { font-size:12px; padding:5px 0; border-bottom:1px solid #F1F3F8; }
   .journal .who { font-weight:700; color:#1454FF; }
@@ -262,6 +287,12 @@
     <div id="gallery-strip">불러오는 중...</div>
   </div>
 
+  <div class="panel" style="margin-top:16px;">
+    <h2>🔍 근거 검증실 <span style="font-weight:500; font-size:12px; color:#98a2b8;">카드 문구별 출처 — 클릭하면 원문(법령·기관·기사)으로 이동합니다</span></h2>
+    <div id="ev-tabs"></div>
+    <div id="ev-list">불러오는 중...</div>
+  </div>
+
   <div class="bottom-grid">
     <div class="panel">
       <h2>📮 작업 요청 <span style="font-weight:500; font-size:12px; color:#98a2b8;">주제를 적으면 편집국이 접수합니다</span></h2>
@@ -289,6 +320,7 @@
       <button id="v-next">›</button>
     </div>
     <div id="v-links"><a id="v-insta" href="#" target="_blank" rel="noopener">인스타그램에서 보기 ↗</a></div>
+    <div id="v-evidence" hidden></div>
   </div>
 
 <script>
@@ -499,6 +531,7 @@ async function fetchPosts() {
       <div class="g-date">${p.date} · ${p.cards}장</div>
     </div>`
   ).join('') || '아직 발행물이 없습니다';
+  renderEvTabs();
 }
 function renderViewer() {
   document.getElementById('v-img').src = cardUrl(vPost, vIdx);
@@ -508,7 +541,42 @@ function renderViewer() {
   const a = document.getElementById('v-insta');
   a.style.display = vPost.permalink ? '' : 'none';
   a.href = vPost.permalink || '#';
+  // 이 카드의 근거 표시
+  const items = (evidence[vPost.slug] || []).filter(e => e.card === vIdx + 1);
+  const box = document.getElementById('v-evidence');
+  box.hidden = !items.length;
+  box.innerHTML = items.length ? '<div id="v-ev-title">📎 이 카드의 근거</div>' + items.map(evRow).join('') : '';
 }
+
+// ---------- 근거 검증실 ----------
+let evidence = {}; // slug → items
+let evSelected = null;
+const esc = (t) => String(t || '').replace(/</g, '&lt;');
+const evRow = (e) => `<div class="ev-row">
+  <span class="ev-card-badge">카드 ${esc(e.card)}</span>
+  <span class="ev-kind">${esc(e.kind)}</span>
+  <span class="ev-claim">${esc(e.claim)}</span>
+  <a class="ev-link" href="${encodeURI(e.url || '')}" target="_blank" rel="noopener">${esc(e.source)} ↗</a>
+</div>`;
+
+async function fetchEvidence() {
+  try {
+    const rows = await (await sfetch('office_evidence?select=slug,items')).json();
+    evidence = Object.fromEntries(rows.map(r => [r.slug, r.items]));
+  } catch (e) { return; }
+  renderEvTabs();
+}
+function renderEvTabs() {
+  const slugs = posts.filter(p => evidence[p.slug]).map(p => p.slug);
+  if (!slugs.length) { document.getElementById('ev-list').textContent = '아직 검증 자료가 없습니다'; return; }
+  if (!evSelected || !evidence[evSelected]) evSelected = slugs[0];
+  document.getElementById('ev-tabs').innerHTML = posts.filter(p => evidence[p.slug]).map(p =>
+    `<button class="ev-tab ${p.slug === evSelected ? 'on' : ''}" onclick="selectEv('${p.slug}')">${esc(p.topic)}</button>`
+  ).join('');
+  document.getElementById('ev-list').innerHTML =
+    (evidence[evSelected] || []).slice().sort((a, b) => a.card - b.card).map(evRow).join('');
+}
+window.selectEv = (slug) => { evSelected = slug; renderEvTabs(); };
 window.openViewer = (i) => { vPost = posts[i]; vIdx = 0; renderViewer(); document.getElementById('viewer').classList.add('open'); };
 document.getElementById('v-close').onclick = () => document.getElementById('viewer').classList.remove('open');
 document.getElementById('viewer').onclick = (e) => { if (e.target.id === 'viewer') document.getElementById('viewer').classList.remove('open'); };
@@ -566,7 +634,8 @@ function fit() {
 window.addEventListener('resize', fit);
 
 fit();
-fetchStatus(); fetchPosts(); fetchRequests();
+fetchStatus(); fetchPosts(); fetchRequests(); fetchEvidence();
+setInterval(fetchEvidence, 60000);
 setInterval(fetchStatus, 2500);
 setInterval(fetchRequests, 10000);
 setInterval(fetchPosts, 30000);
